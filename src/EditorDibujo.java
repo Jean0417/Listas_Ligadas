@@ -6,13 +6,13 @@ import java.util.List;
 
 public class EditorDibujo extends JFrame {
     private ListaLigada trazos = new ListaLigada();  
-    private String figuraSeleccionada; 
+    private String figuraSeleccionada = "Linea"; 
     private JPanel panelDibujo;
-    private int startX, startY, endX, endY;  // Coordenadas de inicio y fin de la figura
-    private boolean isDragging = false;  // Indica si el usuario está arrastrando para definir el tamaño
-    private Trazo figuraEnProceso = null; // Figura que está siendo dibujada
-    private Trazo figuraSeleccionadaPanel = null; // Figura que se selecciona al hacer clic en el panel
-    private boolean modoSeleccion = false; // Estado para saber si estamos en modo selección
+    private int startX, startY, endX, endY;  
+    private boolean isDragging = false;  
+    private Trazo figuraEnProceso = null; 
+    private Trazo figuraSeleccionadaPanel = null; 
+    private boolean modoSeleccion = false; 
 
     public EditorDibujo() {
         setTitle("Editor de Dibujos Vectoriales");
@@ -20,36 +20,32 @@ public class EditorDibujo extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Estilo para la ventana
-        getContentPane().setBackground(new Color(250, 250, 250));  // Fondo gris claro
-
-        // Panel de dibujo con bordes y fondo azul cielo
+        getContentPane().setBackground(new Color(250, 250, 250));  
         panelDibujo = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // Dibujar todos los trazos en el panel usando la lista ligada
                 trazos.dibujar(g);
-                // Si está arrastrando, dibuja la figura en proceso
+
                 if (figuraEnProceso != null) {
                     figuraEnProceso.dibujar(g);
                 }
-                // Si una figura está seleccionada, dibujarla de alguna forma destacada
+                
                 if (figuraSeleccionadaPanel != null) {
-                    g.setColor(Color.RED); // Cambiar color a rojo para la figura seleccionada
+                    g.setColor(Color.RED); 
                     figuraSeleccionadaPanel.dibujar(g);
                 }
             }
         };
-        panelDibujo.setBackground(new Color(191, 218, 255));  // Fondo azul cielo suave
-        panelDibujo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));  // Borde negro
+        panelDibujo.setBackground(new Color(191, 218, 255));  
+        panelDibujo.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));  
         panelDibujo.setPreferredSize(new Dimension(700, 500));
         panelDibujo.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 if (modoSeleccion) {
                     startX = e.getX();
                     startY = e.getY();
-                    // Verificar si la figura que se hizo clic está seleccionada
+        
                     Nodo actual = trazos.cabeza;
                     while (actual != null) {
                         if (actual.trazo.contains(startX, startY)) {
@@ -72,11 +68,11 @@ public class EditorDibujo extends JFrame {
                 if (!modoSeleccion && isDragging) {
                     Trazo trazoFinal = crearFigura(startX, startY, endX, endY);
                     if (trazoFinal != null) {
-                        trazos.agregar(trazoFinal);  // Usamos el método agregar de la lista ligada
-                        panelDibujo.repaint();  // Redibujar el panel
+                        trazos.agregar(trazoFinal);  
+                        panelDibujo.repaint();  
                     }
                     isDragging = false;
-                    figuraEnProceso = null;  // Finalizar el dibujo de la figura
+                    figuraEnProceso = null;  
                 }
             }
         });
@@ -87,19 +83,16 @@ public class EditorDibujo extends JFrame {
                 endY = e.getY();
                 if (!modoSeleccion) {
                     figuraEnProceso = crearFigura(startX, startY, endX, endY);
-                    panelDibujo.repaint();  // Redibujar el panel mientras se arrastra
+                    panelDibujo.repaint();  
                 }
             }
         });
 
         add(panelDibujo, BorderLayout.CENTER);
 
-        // Panel de botones con fondo azul cielo suave
         JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(new Color(191, 218, 255));  // Fondo azul cielo
-        panelBotones.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));  // Alineación a la izquierda
-
-        // Agregar los botones con imágenes y texto
+        panelBotones.setBackground(new Color(191, 218, 255));  
+        panelBotones.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));  
         panelBotones.add(crearBotonConImagen("figuras.png", "Figura", e -> seleccionarFigura()));
         panelBotones.add(crearBotonConImagen("seleccionar.png", "Seleccionar", e -> activarModoSeleccion()));
         panelBotones.add(crearBotonConImagen("eliminar.png", "Eliminar", e -> eliminarFiguraSeleccionada()));
@@ -109,26 +102,22 @@ public class EditorDibujo extends JFrame {
         add(panelBotones, BorderLayout.NORTH);
     }
 
-    // Método para crear un botón con una imagen y un texto
     private JButton crearBotonConImagen(String rutaImagen, String texto, ActionListener accion) {
         JButton boton = new JButton(texto);
         boton.addActionListener(accion);
 
-        // Cargar la imagen desde el archivo en src/imagenes
         ImageIcon icono = new ImageIcon(getClass().getResource("/imagenes/" + rutaImagen));
-        Image imagen = icono.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);  // Redimensionamos la imagen
+        Image imagen = icono.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); 
         boton.setIcon(new ImageIcon(imagen));
 
-        // Establecer el texto debajo de la imagen
-        boton.setVerticalTextPosition(SwingConstants.BOTTOM);  // Poner el texto debajo de la imagen
-        boton.setHorizontalTextPosition(SwingConstants.CENTER);  // Centrar el texto horizontalmente
-        boton.setText(texto);  // Asignar el texto
+        boton.setVerticalTextPosition(SwingConstants.BOTTOM);  
+        boton.setHorizontalTextPosition(SwingConstants.CENTER);  
+        boton.setText(texto); 
 
         return boton;
     }
 
     private void seleccionarFigura() {
-        // Selecciona la figura para dibujar (puedes cambiar la figura aquí si deseas)
         String[] opciones = {"Linea", "Rectangulo", "Circulo"};
         figuraSeleccionada = (String) JOptionPane.showInputDialog(this, 
             "Selecciona una figura para dibujar:",
@@ -138,15 +127,15 @@ public class EditorDibujo extends JFrame {
     private void activarModoSeleccion() {
         // Activar o desactivar el modo de selección
         modoSeleccion = !modoSeleccion;
-        String mensaje = modoSeleccion ? "Modo selección activado." : "Modo selección desactivado.";
+        String mensaje = modoSeleccion ? "Modo selección activado." : "Modo selección desactivado."; //Dar cick nuevamente para desabilitarlo, de lo contrario no podre dibujar mas figuras
         JOptionPane.showMessageDialog(panelDibujo, mensaje);
     }
 
     private void eliminarFiguraSeleccionada() {
         if (figuraSeleccionadaPanel != null) {
-            trazos.eliminar(figuraSeleccionadaPanel);  // Usamos el método eliminar de la lista ligada
-            figuraSeleccionadaPanel = null;  // Deseleccionar la figura
-            panelDibujo.repaint();  // Redibujar el panel de inmediato
+            trazos.eliminar(figuraSeleccionadaPanel);  
+            figuraSeleccionadaPanel = null;  
+            panelDibujo.repaint();  
             JOptionPane.showMessageDialog(panelDibujo, "Figura eliminada.");
         } else {
             JOptionPane.showMessageDialog(panelDibujo, "No hay figura seleccionada.");
@@ -170,14 +159,9 @@ public class EditorDibujo extends JFrame {
     }
 
     private void guardarDibujo() {
-        // Crear un JFileChooser para seleccionar la ubicación y el nombre del archivo
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Guardar Dibujo");
-        
-        // Mostrar el cuadro de diálogo de guardar
+        fileChooser.setDialogTitle("Guardar Dibujo");  
         int resultado = fileChooser.showSaveDialog(this);
-        
-        // Si el usuario selecciona "Guardar"
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivo = fileChooser.getSelectedFile();
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(archivo))) {
@@ -194,18 +178,14 @@ public class EditorDibujo extends JFrame {
     }
 
     private void cargarDibujo() {
-        // Crear un JFileChooser para seleccionar el archivo a cargar
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Cargar Dibujo");
-        
-        // Mostrar el cuadro de diálogo de abrir
         int resultado = fileChooser.showOpenDialog(this);
         
-        // Si el usuario selecciona "Abrir"
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivo = fileChooser.getSelectedFile();
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(archivo))) {
-                trazos = new ListaLigada();  // Limpiar la lista de trazos
+                trazos = new ListaLigada();  
                 while (true) {
                     try {
                         Trazo trazo = (Trazo) ois.readObject();
@@ -214,7 +194,7 @@ public class EditorDibujo extends JFrame {
                         break;
                     }
                 }
-                panelDibujo.repaint();  // Redibujar el panel con las figuras cargadas
+                panelDibujo.repaint();  
                 JOptionPane.showMessageDialog(this, "Dibujo cargado exitosamente.");
             } catch (IOException | ClassNotFoundException ex) {
                 JOptionPane.showMessageDialog(this, "Error al cargar el archivo.");

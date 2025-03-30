@@ -1,4 +1,3 @@
-// Rectangulo.java
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -14,7 +13,7 @@ public class Rectangulo extends Trazo {
         int x = Math.min(x1, x2);
         int y = Math.min(y1, y2);
 
-        g.setColor(Color.WHITE);  // Color blanco para el rectángulo
+        g.setColor(Color.WHITE);  
         g.fillRect(x, y, ancho, alto);
     }
 

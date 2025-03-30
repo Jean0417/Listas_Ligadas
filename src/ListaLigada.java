@@ -7,7 +7,6 @@ public class ListaLigada {
         cabeza = null;
     }
 
-    // Método para agregar un trazo al final de la lista
     public void agregar(Trazo trazo) {
         Nodo nuevoNodo = new Nodo(trazo);
         if (cabeza == null) {
@@ -21,11 +20,9 @@ public class ListaLigada {
         }
     }
 
-    // Método para eliminar un trazo de la lista
     public void eliminar(Trazo trazo) {
         if (cabeza == null) return;
 
-        // Si el trazo a eliminar es el primero
         if (cabeza.trazo.equals(trazo)) {
             cabeza = cabeza.siguiente;
             return;
@@ -41,7 +38,6 @@ public class ListaLigada {
         }
     }
 
-    // Método para recorrer la lista y dibujar los trazos
     public void dibujar(Graphics g) {
         Nodo actual = cabeza;
         while (actual != null) {

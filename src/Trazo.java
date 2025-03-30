@@ -1,4 +1,3 @@
-// Trazo.java
 import java.awt.Graphics;
 import java.io.Serializable;
 
