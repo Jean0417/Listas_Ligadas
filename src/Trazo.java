@@ -13,6 +13,6 @@ public abstract class Trazo implements Serializable {
 
     public abstract void dibujar(Graphics g);
     
-    // Método para verificar si el clic ocurrió dentro de la figura
+
     public abstract boolean contains(int x, int y);
 }
